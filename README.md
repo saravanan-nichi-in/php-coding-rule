@@ -10,23 +10,67 @@ Last updated at 21 Jun 2021
 
 ## Routing
 
-### Grouping Routes
+## Prefix grouping
 
-#### Do's
+#### Don't :
 
+```php
+Route::get('/api/user', 'UserController@index');
+Route::get('/api/post', 'PostController@index');
 ```
-Route::prefix(‘api’)->group(function(){
 
-	Route::get(‘/user’, UserController@index);
-	Route::get(‘/post’, PostController@index);
+#### Do's :
+
+```php
+Route::prefix('api')->group(function(){
+
+	Route::get('/user', 'UserController@index');
+	Route::get('/post', 'PostController@index');
 
 });
 ```
 
+## Middleware Grouping
 
-#### Don't
+#### Don't :
 
+```php
+Route::get('/user', 'UserController@index')->middleware('auth');
+Route::get('/post', 'PostController@index')->middleware('auth');
 ```
-Route::get(‘/api/user’, UserController@index);
-Route::get(‘/api/post’, PostController@index);
+
+#### Do's :
+
+```php
+Route::middleware(['auth'])->group(function(){
+
+	Route::get('/user', 'UserController@index');
+	Route::get('/post', 'PostController@index');
+
+});
+```
+
+## Nested Middleware Grouping
+
+#### Don't :
+
+```php
+Route::get('/dashboard', 'DashboardController@index')->middleware(['auth','admin']);
+Route::get('/user', 'UserController@index')->middleware(['auth','user']);
+Route::get('/post', 'PostController@index')->middleware(['auth','user']);
+```
+
+#### Do's :
+
+```php
+Route::middleware(['auth'])->group(function(){
+	Route::middleware(['user'])->group(function(){
+		Route::get('/user', 'UserController@index');
+		Route::get('/post', 'PostController@index');	
+	});
+	
+	Route::middleware(['admin'])->group(function(){
+		Route::get('/dashboard', 'DashboardController@index');
+	});
+});
 ```
