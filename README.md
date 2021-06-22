@@ -7,8 +7,9 @@ Last updated at 21 Jun 2021
 1. [Validation](https://github.com/saravanan-nichi-in/laravel-coding-rule#validation)
 2. [Utility](https://github.com/saravanan-nichi-in/laravel-coding-rule#utility)
 3. [Tools](https://github.com/saravanan-nichi-in/laravel-coding-rule#tools)
-4. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
-5. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
+4. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
+5. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
+6. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
 
 
 ## Validation
@@ -90,18 +91,130 @@ Setup sonarqube in server to scan dynamically with the help of Jenkins.
 * vendor/bin/phpstan analyse src tests
 
 
+## Helper
+
+Try to consume helper function as possible.
+
+### Session
+
+#### Bad :
+
+```php
+$request->session()->get('cart');
+Session::get('cart')
+$request->session()->get('cart')
+
+Session::put('cart', $data)
+```
+
+#### Good :
+
+```php
+session('cart');
+
+session(['cart' => $data])
+```
+
+### Request
+
+#### Bad :
+
+```php
+$request->input('name');
+Request::get('name')
+$request->has('value') ? $request->value : 'default';
+```
+
+#### Good :
+
+```php
+$request->name;
+request('name')
+$request->get('value', 'default')
+```
+
+### Redirect
+
+#### Bad :
+
+```php
+return Redirect::back()
+```
+
+#### Good :
+
+```php
+return back()
+```
+
+### View
+
+#### Bad :
+
+```php
+return view('index')->with('title', $title)->with('client', $client)
+```
+
+#### Good :
+
+```php
+return view('index', compact('title', 'client'))
+```
+
+### Carbon
+
+#### Bad :
+
+```php
+Carbon::now()
+Carbon::today()
+```
+
+#### Good :
+
+```php
+now()
+today()
+```
+
+
+### Eloquent
+
+#### Bad :
+
+```php
+->where('column', '=', 1)
+->orderBy('created_at', 'desc')
+->orderBy('age', 'desc')
+->orderBy('created_at', 'asc')
+->select('id', 'name')->get()
+->first()->name
+```
+
+#### Good :
+
+```php
+->where('column', 1)
+->latest()
+->latest('age')
+->oldest()
+->get(['id', 'name'])
+->value('name')
+```
+
+
 ## Routing
 
 ### Prefix grouping
 
-#### Don't :
+#### Bad :
 
 ```php
 Route::get('/api/user', 'UserController@index');
 Route::get('/api/post', 'PostController@index');
 ```
 
-#### Do's :
+#### Good :
 
 ```php
 Route::prefix('api')->group(function(){
@@ -114,14 +227,14 @@ Route::prefix('api')->group(function(){
 
 ### Middleware Grouping
 
-#### Don't :
+#### Bad :
 
 ```php
 Route::get('/user', 'UserController@index')->middleware('auth');
 Route::get('/post', 'PostController@index')->middleware('auth');
 ```
 
-#### Do's :
+#### Good :
 
 ```php
 Route::middleware(['auth'])->group(function(){
@@ -134,7 +247,7 @@ Route::middleware(['auth'])->group(function(){
 
 ### Nested Middleware Grouping
 
-#### Don't :
+#### Bad :
 
 ```php
 Route::get('/dashboard', 'DashboardController@index')->middleware(['auth','admin']);
@@ -142,7 +255,7 @@ Route::get('/user', 'UserController@index')->middleware(['auth','user']);
 Route::get('/post', 'PostController@index')->middleware(['auth','user']);
 ```
 
-#### Do's :
+#### Good :
 
 ```php
 Route::middleware(['auth'])->group(function(){
