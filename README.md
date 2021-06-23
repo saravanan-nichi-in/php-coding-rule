@@ -7,9 +7,11 @@ Last updated at 21 Jun 2021
 1. [Validation](https://github.com/saravanan-nichi-in/laravel-coding-rule#validation)
 2. [Utility](https://github.com/saravanan-nichi-in/laravel-coding-rule#utility)
 3. [Tools](https://github.com/saravanan-nichi-in/laravel-coding-rule#tools)
-4. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
-5. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
-6. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
+4. [Rules](https://github.com/saravanan-nichi-in/laravel-coding-rule#rules)
+5. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
+6. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
+7. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
+8. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request)
 
 
 ## Validation
@@ -89,6 +91,91 @@ Setup sonarqube in server to scan dynamically with the help of Jenkins.
 
 * Add in Composer Dev dependencies => composer require --dev phpstan/phpstan
 * vendor/bin/phpstan analyse src tests
+
+## Rules
+
+Rules defined here to follow
+
+### Single Responsibility
+
+A class and a method should have only one responsibility.
+
+#### Bad :
+
+```php
+   public function getFullNameAttribute()
+    {
+        if (auth()->user() && auth()->user()->hasRole('client') && auth()->user()->isVerified()) {
+            return 'Mr. ' . $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+        } else {
+            return $this->first_name[0] . '. ' . $this->last_name;
+        }
+    }
+```
+
+#### Good :
+
+```php
+    public function getFullNameAttribute()
+    {
+        return $this->isVerifiedClient() ? $this->getFullNameLong() : $this->getFullNameShort();
+    }
+
+    public function isVerifiedClient()
+    {
+        return auth()->user() && auth()->user()->hasRole('client') && auth()->user()->isVerified();
+    }
+
+    public function getFullNameLong()
+    {
+        return 'Mr. ' . $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+    }
+
+    public function getFullNameShort()
+    {
+        return $this->first_name[0] . '. ' . $this->last_name;
+    }
+```
+
+### Fat models, skinny controllers
+
+Put all DB related logic into Eloquent models or into Repository classes if you’re using Query Builder or raw SQL queries.
+
+#### Bad :
+
+```php
+   public function index()
+    {
+        $clients = Client::verified()
+            ->with(['orders' => function ($q) {
+                $q->where('created_at', '>', today()->subWeek());
+            }])
+            ->get();
+
+        return view('index', ['clients' => $clients]);
+    }
+```
+
+#### Good :
+
+```php
+    public function index()
+    {
+        return view('index', ['clients' => $this->client->getWithNewOrders()]);
+    }
+
+    class Client extends Model
+    {
+        public function getWithNewOrders()
+        {
+            return $this->verified()
+                ->with(['orders' => function ($q) {
+                    $q->where('created_at', '>', today()->subWeek());
+                }])
+                ->get();
+        }
+    }
+```
 
 
 ## Helper
@@ -225,6 +312,8 @@ Route::prefix('api')->group(function(){
 });
 ```
 
+## Middleware
+
 ### Middleware Grouping
 
 #### Bad :
@@ -268,4 +357,46 @@ Route::middleware(['auth'])->group(function(){
 		Route::get('/dashboard', 'DashboardController@index');
 	});
 });
+```
+
+## Request
+
+### Validation
+
+Move validation from controllers to Request classes.
+
+#### Bad :
+
+```php
+   public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|unique:posts|max:255',
+            'body' => 'required',
+            'publish_at' => 'nullable|date',
+        ]);
+
+        ....
+    }
+```
+
+#### Good :
+
+```php
+    public function store(PostRequest $request)
+    {
+        ....
+    }
+
+    class PostRequest extends Request
+    {
+        public function rules()
+        {
+            return [
+                'title' => 'required|unique:posts|max:255',
+                'body' => 'required',
+                'publish_at' => 'nullable|date',
+            ];
+        }
+    }
 ```
