@@ -12,6 +12,7 @@ Last updated at 21 Jun 2021
 6. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
 7. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
 8. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
+9. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
 
 
 ## Validation
@@ -257,6 +258,97 @@ Put all DB related logic into Eloquent models or into Repository classes if you�
     }
 ```
 
+### Comment your code, but prefer descriptive method and variable names over comments
+
+Put all DB related logic into Eloquent models or into Repository classes if you’re using Query Builder or raw SQL queries.
+
+#### Bad :
+
+```php
+  if (count((array) $builder->getQuery()->joins) > 0)
+```
+
+#### Good :
+
+```php
+    if ($this->hasJoins())
+```
+
+### Prefer to use Eloquent over using Query Builder and raw SQL queries. Prefer collections over arrays
+
+Eloquent allows you to write readable and maintainable code. Also, Eloquent has great built-in tools like soft deletes, events, scopes etc.
+
+#### Bad :
+
+```php
+   SELECT *
+    FROM `articles`
+    WHERE EXISTS (SELECT *
+                  FROM `users`
+                  WHERE `articles`.`user_id` = `users`.`id`
+                  AND EXISTS (SELECT *
+                              FROM `profiles`
+                              WHERE `profiles`.`user_id` = `users`.`id`)
+                  AND `users`.`deleted_at` IS NULL)
+    AND `verified` = '1'
+    AND `active` = '1'
+    ORDER BY `created_at` DESC
+```
+
+#### Good :
+
+```php
+    Article::has('user.profile')->verified()->latest()->get();
+```
+
+### Mass assignment
+
+Eloquent allows you to write readable and maintainable code. Also, Eloquent has great built-in tools like soft deletes, events, scopes etc.
+
+#### Bad :
+
+```php
+   $article = new Article;
+    $article->title = $request->title;
+    $article->content = $request->content;
+    $article->verified = $request->verified;
+    // Add category to article
+    $article->category_id = $category->id;
+    $article->save();
+```
+
+
+#### Good :
+
+```php
+    $category->article()->create($request->all());
+```
+
+### Use config and language files, constants instead of text in the code
+
+Put all DB related logic into Eloquent models or into Repository classes if you’re using Query Builder or raw SQL queries.
+
+#### Bad :
+
+```php
+    public function isNormal()
+    {
+        return $article->type === 'normal';
+    }
+
+    return back()->with('message', 'Your article has been added!');
+```
+
+#### Good :
+
+```php
+    public function isNormal()
+    {
+        return $article->type === Article::TYPE_NORMAL;
+    }
+
+    return back()->with('message', __('app.article_added'));
+```
 
 ## Helper
 
@@ -499,4 +591,30 @@ Try to implement guarded instead of Fillable.
 
 ```php
     protected $guarded = ['project_id'];
+```
+
+## Views
+
+### Blade
+
+Do not execute queries in Blade templates and use eager loading (N + 1 problem). For 100 users, 101 DB queries will be executed.
+
+#### Bad :
+
+```php
+   @foreach (User::all() as $user)
+	
+    @endforeach
+```
+
+#### Good :
+
+```php
+    $users = User::with('profile')->get();
+
+    ...
+
+    @foreach ($users as $user)
+
+    @endforeach
 ```
