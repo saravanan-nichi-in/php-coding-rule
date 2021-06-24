@@ -11,7 +11,7 @@ Last updated at 21 Jun 2021
 5. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
 6. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
 7. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
-8. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request)
+8. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
 
 
 ## Validation
@@ -134,6 +134,86 @@ A class and a method should have only one responsibility.
     public function getFullNameShort()
     {
         return $this->first_name[0] . '. ' . $this->last_name;
+    }
+```
+
+### Business logic should be in service class
+
+A controller must have only one responsibility, so move business logic from controllers to service classes.
+
+#### Bad :
+
+```php
+   public function store(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $request->file('image')->move(public_path('images') . 'temp');
+        }
+
+        ....
+    }
+```
+
+#### Good :
+
+```php
+    public function store(Request $request)
+    {
+        $this->articleService->handleUploadedImage($request->file('image'));
+
+        ....
+    }
+
+    class ArticleService
+    {
+        public function handleUploadedImage($image)
+        {
+            if (!is_null($image)) {
+                $image->move(public_path('images') . 'temp');
+            }
+        }
+    }
+    
+```
+
+### Don’t repeat yourself (DRY)
+
+Reuse code when you can. SRP is helping you to avoid duplication. Also, reuse Blade templates, use Eloquent scopes etc.
+
+#### Bad :
+
+```php
+   public function getActive()
+    {
+        return $this->where('verified', 1)->whereNotNull('deleted_at')->get();
+    }
+
+    public function getArticles()
+    {
+        return $this->whereHas('user', function ($q) {
+                $q->where('verified', 1)->whereNotNull('deleted_at');
+            })->get();
+    }
+```
+
+#### Good :
+
+```php
+    public function scopeActive($q)
+    {
+        return $q->where('verified', 1)->whereNotNull('deleted_at');
+    }
+
+    public function getActive()
+    {
+        return $this->active()->get();
+    }
+
+    public function getArticles()
+    {
+        return $this->whereHas('user', function ($q) {
+                $q->active();
+            })->get();
     }
 ```
 
@@ -399,4 +479,24 @@ Move validation from controllers to Request classes.
             ];
         }
     }
+```
+
+### Fillable and Guarded
+
+Try to implement guarded instead of Fillable.
+
+#### Bad :
+
+```php
+   protected $fillable=[
+        'id', 'quotation_id', 'order_loss_date', 'scheduled_delivery_date','expected_return_date',
+        'created_operator_id', 'payment_type', 'billing_start', 'billing_end', 'unbilled_confirmation',
+        'remarks', 'created_at', 'updated_operator_id', 'updated_at'
+    ];
+```
+
+#### Good :
+
+```php
+    protected $guarded = ['project_id'];
 ```
