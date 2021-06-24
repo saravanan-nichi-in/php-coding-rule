@@ -350,6 +350,50 @@ Put all DB related logic into Eloquent models or into Repository classes if youâ
     return back()->with('message', __('app.article_added'));
 ```
 
+### Use IoC container or facades instead of new Class
+
+new Class syntax creates tight coupling between classes and complicates testing. Use IoC container or facades instead.
+
+#### Bad :
+
+```php
+    $user = new User;
+    $user->create($request->all());
+```
+
+#### Good :
+
+```php
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    $this->user->create($request->all());
+```
+
+### Do not get data from the ".env"-file directly
+
+Pass the data to config files instead and then use the config() helper function to use the data in an application.
+
+#### Bad :
+
+```php
+    $apiKey = env('API_KEY');
+```
+
+#### Good :
+
+```php
+    // config/api.php
+    'key' => env('API_KEY'),
+
+    // Use the data
+    $apiKey = config('api.key');
+```
+
+
+
 ## Helper
 
 Try to consume helper function as possible.
