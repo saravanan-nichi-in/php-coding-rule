@@ -15,6 +15,7 @@ Last updated at 19 Jul 2021
 9. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
 10. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
 11. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
+12. [Model](https://github.com/saravanan-nichi-in/laravel-coding-rule#model)
 
 
 ## Validation
@@ -917,4 +918,34 @@ Do not execute queries in Blade templates and use eager loading (N + 1 problem).
     @foreach ($users as $user)
 
     @endforeach
+```
+
+## Model
+
+### Query Scopes
+
+Query scopes are useful to make code more elegant.
+
+#### without Query Scope :
+
+```php
+
+   $active_administrators = User::where('active', '=', 1)->where('is_admin', '=', 1)->get();
+   
+```
+
+#### with Query Scope :
+
+```php
+	public function scopeActive($query)
+	{
+	    return $query->where('active', '=', 1);
+	}
+
+	public function scopeAdmin($query)
+	{
+	    return $query->where('is_admin', '=', 1);
+	}
+	
+	$active_administrators = User::active()->admin()->get();
 ```
