@@ -223,6 +223,27 @@ A method name should follow camelCase. Only the characters a-z, A-Z and 0-9 are 
 	}
 ```
 
+### Function
+
+A function name should follow snake_case.
+
+#### Bad :
+
+```php
+	public function abortIf(){}
+	public function abortif(){}
+	public function abort-If(){}
+```
+
+#### Good :
+
+```php
+        public function abort_if()
+	{
+
+	}
+```
+
 ### Variable
 
 A variable name should follow camelCase.
