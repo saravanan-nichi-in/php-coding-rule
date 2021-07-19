@@ -202,6 +202,26 @@ A class name should follow PascalCase.
 	}
 ```
 
+### Others
+
+A list of naming conventions provided below table.
+
+| Type | Data | Good |
+|:------|:------|:------|
+| Class | Singular | UserController |
+| Model | Singular | User |
+| Trait | adjective | Notifiable |
+| Method in test class | camelCase | testGuestCannotSeeArticle |
+| Route | plural | articles/1 |
+| Named route | snake_case with dot notation | users.show_active |
+| hasOne or belongsTo relationship | singular | articleComment |
+| All other relationships | plural | articleComments |
+| table | plural | article_comments |
+| Pivot table | singular model names in alphabetical order | article_user |
+| Table column | snake_case without model name | meta_title |
+| Foreign key | singular model name with _id suffix | article_id |
+| Primary key | - | id |
+
 ### Method
 
 A method name should follow camelCase. Only the characters a-z, A-Z and 0-9 are allowed for method names.
@@ -323,10 +343,10 @@ A list of filenaming conventions provided below table.
 
 | Type | Data | Good |
 |------|------|------|
-| Class | PascalCase | UserController, User |
+| Class | PascalCase | UserController.php, User.php |
 | View | kebab-case | show-filtered.blade.php |
 | Config | kebab-case | google-calendar.php |
-| Migration | snake_case | 2017_01_01_000000_create_articles_table |
+| Migration | snake_case | 2017_01_01_000000_create_articles_table.php |
 
 
 ## Rules
