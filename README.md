@@ -1,13 +1,13 @@
 # Coding Rule
 Coding rule for Laravel Framework
-Last updated at 21 Jun 2021
+Last updated at 19 Jul 2021
 
 # Table of Contents
 
 1. [Validation](https://github.com/saravanan-nichi-in/laravel-coding-rule#validation)
 2. [Utility](https://github.com/saravanan-nichi-in/laravel-coding-rule#utility)
 3. [Tools](https://github.com/saravanan-nichi-in/laravel-coding-rule#tools)
-4. [Namings](https://github.com/saravanan-nichi-in/laravel-coding-rule#namings)
+4. [Naming](https://github.com/saravanan-nichi-in/laravel-coding-rule#naming)
 5. [Rules](https://github.com/saravanan-nichi-in/laravel-coding-rule#rules)
 6. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
 7. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
@@ -177,7 +177,7 @@ A constant name should follow UPPERCASE. Words can be separated by underscore ( 
         MY_CONSTANT = null;
 ```
 
-### FILENAME
+### Filename
 
 A filename name should follow UpperCamelCase.
 
