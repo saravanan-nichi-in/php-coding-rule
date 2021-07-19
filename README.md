@@ -7,12 +7,13 @@ Last updated at 21 Jun 2021
 1. [Validation](https://github.com/saravanan-nichi-in/laravel-coding-rule#validation)
 2. [Utility](https://github.com/saravanan-nichi-in/laravel-coding-rule#utility)
 3. [Tools](https://github.com/saravanan-nichi-in/laravel-coding-rule#tools)
-4. [Rules](https://github.com/saravanan-nichi-in/laravel-coding-rule#rules)
-5. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
-6. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
-7. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
-8. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
-9. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
+4. [Namings](https://github.com/saravanan-nichi-in/laravel-coding-rule#namings)
+5. [Rules](https://github.com/saravanan-nichi-in/laravel-coding-rule#rules)
+6. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
+7. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
+8. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
+9. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
+10. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
 
 
 ## Validation
@@ -92,6 +93,107 @@ Setup sonarqube in server to scan dynamically with the help of Jenkins.
 
 * Add in Composer Dev dependencies => composer require --dev phpstan/phpstan
 * vendor/bin/phpstan analyse src tests
+
+## Namings
+
+It is very much mandatory to maintain the consistency across the application
+
+### Class
+
+A class name should follow PascalCase. 
+
+#### Bad :
+
+```php
+	class logincontroller extends Controller { }
+	class loginController extends Controller { }
+	class Logincontroller extends Controller { }	
+```
+
+#### Good :
+
+```php
+	class LoginController extends Controller
+	{
+
+	}
+```
+
+### Method
+
+A method name should follow camelCase. Only the characters a-z, A-Z and 0-9 are allowed for method names.
+
+#### Bad :
+
+```php
+	public function userregistration(){}
+	public function Userregistration(){}
+	public function user-registration(){}
+```
+
+#### Good :
+
+```php
+        public function userRegistration()
+	{
+
+	}
+```
+
+### Variable
+
+A variable name should follow camelCase.
+
+#### Bad :
+
+```php
+	$myfirstvariable = null;
+	$Myfirstvariable = null;
+	$my-first-variable = null;
+```
+
+#### Good :
+
+```php
+        $myFirstVariable = null;
+```
+
+### Constant
+
+A constant name should follow UPPERCASE. Words can be separated by underscore ( _ ).
+
+#### Bad :
+
+```php
+	myconstant = null;
+	MyConstant = null;
+	My-Constant = null;
+	my-constant = null;	
+```
+
+#### Good :
+
+```php
+        MY_CONSTANT = null;
+```
+
+### FILENAME
+
+A filename name should follow UpperCamelCase.
+
+#### Bad :
+
+```php
+	app/Http/Controllers/Auth/myLoginController.php
+	app/Http/Controllers/Auth/mylogincontroller.php	
+	app/Http/Controllers/Auth/my-login-controller.php	
+```
+
+#### Good :
+
+```php
+	app/Http/Controllers/Auth/MyLoginController.php
+```
 
 ## Rules
 
