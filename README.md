@@ -317,6 +317,18 @@ A filename name should follow UpperCamelCase.
 	app/Http/Controllers/Auth/MyLoginController.php
 ```
 
+### Others
+
+A list of filenaming conventions provided below table.
+
+| Type | Data | Good |
+|------|------|------|
+| Class | PascalCase | UserController, User |
+| View | kebab-case | show-filtered.blade.php |
+| Config | kebab-case | google-calendar.php |
+| Migration | snake_case | 2017_01_01_000000_create_articles_table |
+
+
 ## Rules
 
 Rules defined here to follow
