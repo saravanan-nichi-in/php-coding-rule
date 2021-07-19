@@ -7,13 +7,14 @@ Last updated at 19 Jul 2021
 1. [Validation](https://github.com/saravanan-nichi-in/laravel-coding-rule#validation)
 2. [Utility](https://github.com/saravanan-nichi-in/laravel-coding-rule#utility)
 3. [Tools](https://github.com/saravanan-nichi-in/laravel-coding-rule#tools)
-4. [Naming](https://github.com/saravanan-nichi-in/laravel-coding-rule#naming)
-5. [Rules](https://github.com/saravanan-nichi-in/laravel-coding-rule#rules)
-6. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
-7. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
-8. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
-9. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
-10. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
+4. [Documentation](https://github.com/saravanan-nichi-in/laravel-coding-rule#documentation)
+5. [Naming](https://github.com/saravanan-nichi-in/laravel-coding-rule#naming)
+6. [Rules](https://github.com/saravanan-nichi-in/laravel-coding-rule#rules)
+7. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
+8. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
+9. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
+10. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
+11. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
 
 
 ## Validation
@@ -94,7 +95,89 @@ Setup sonarqube in server to scan dynamically with the help of Jenkins.
 * Add in Composer Dev dependencies => composer require --dev phpstan/phpstan
 * vendor/bin/phpstan analyse src tests
 
-## Namings
+## Documentation
+
+All code must be documented with inline comments. 
+
+### Class
+
+Classes have their own documentation block describing the classes purpose. 
+
+#### Example :
+
+```php
+	/**
+	 * First sentence is short description. Then you can write more, just as you like
+	 *
+	 * Here may follow some detailed description about what the class is for.
+	 *
+	 * Paragraphs are separated by an empty line.
+	 *
+	 */
+	class SomeClass
+	{
+	 ...
+	}
+```
+
+### Properties
+
+Properties of class such as variables, constants, includes should be documented as well.
+
+#### Example :
+
+```php
+	/**
+	 * A short description, very much recommended
+	 *
+	 * @var string
+	 */
+	protected $title = 'Untitled';
+```
+
+### Method
+
+Parameters and the return value should only be documented 
+
+#### Example :
+
+```php
+	/**
+	 * A description for this method
+	 *
+	 * Paragraphs are separated by an empty line.
+	 *
+	 * @param Post $post Some description for the $post parameter
+	 * @param string $someString Some description for the $someString parameter
+	 * @return void
+	 *
+	 */
+	public function addStringToPost(Post $post, string $someString): void
+	{
+	 ...
+	}
+```
+
+### Testcase
+
+Testcases need to be marked as being a test and can have some more annotations.
+
+#### Example :
+
+```php
+	/**
+	 * This method is part of the public API.
+	 *
+	 * @return void
+	 * @api
+	 */
+	public function fooBar(): void
+	{
+	 ...
+	}
+```
+
+## Naming
 
 It is very much mandatory to maintain the consistency across the application
 
