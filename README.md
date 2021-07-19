@@ -342,7 +342,7 @@ A filename name should follow UpperCamelCase.
 A list of filenaming conventions provided below table.
 
 | Type | Data | Good |
-|------|------|------|
+|:------|:------|:------|
 | Class | PascalCase | UserController.php, User.php |
 | View | kebab-case | show-filtered.blade.php |
 | Config | kebab-case | google-calendar.php |
