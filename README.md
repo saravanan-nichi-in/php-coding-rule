@@ -241,6 +241,24 @@ A variable name should follow camelCase.
         $myFirstVariable = null;
 ```
 
+### Model
+
+A model property name should follow snake_case.
+
+#### Bad :
+
+```php
+	$model->modelProperty;
+	$model->model-property;
+	$model->ModelProperty;
+```
+
+#### Good :
+
+```php
+        $model->model_property
+```
+
 ### Constant
 
 A constant name should follow UPPERCASE. Words can be separated by underscore ( _ ).
