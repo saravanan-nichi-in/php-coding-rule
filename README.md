@@ -1,5 +1,5 @@
 # Coding Rule
-Coding rule for Laravel Framework
+Coding rule for PHP & Laravel Framework
 Last updated at 19 Jul 2021
 
 # Table of Contents
@@ -15,7 +15,7 @@ Last updated at 19 Jul 2021
 9. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
 10. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
 11. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
-12. [Model](https://github.com/saravanan-nichi-in/laravel-coding-rule#model)
+12. [Model](https://github.com/saravanan-nichi-in/laravel-coding-rule#model-1)
 
 
 ## Validation
