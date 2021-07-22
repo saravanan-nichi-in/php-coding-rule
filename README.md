@@ -649,7 +649,92 @@ Pass the data to config files instead and then use the config() helper function 
     $apiKey = config('api.key');
 ```
 
+### Object Creation
 
+Make it immutable as much as possible. Especially Value Object
+
+#### Bad :
+
+```php
+    class MyClass
+    {
+        private ?Fuga $fuga = null;
+        public function setFuga(Fuga $fuga): void
+        {
+            $this->fuga = $fuga;
+        }
+    }
+
+    $myObject = new MyClass();
+    $myObject->setHoge($fuga);
+```
+
+#### Good :
+
+```php
+    class MyClass
+    {
+        private Fuga $fuga;
+        public function __construct(Fuga $fuga)
+        {
+            $this->fuga = $fuga;
+        }
+    }
+
+    $myObject = new MyClass($fuga);
+```
+
+#### Bad :
+
+```php
+    class MyValueObject
+    {
+        private int $value;
+        public function __construct(int $value)
+        {
+            $this->value = $value;
+        }
+
+        public function getValue(): int
+        {
+            return $this->value;
+        }
+
+        public function setValue(int $value): self
+        {
+            $this->value = $value;
+            return $this;
+        }
+
+    }
+    $old = new MyValueObject(1);
+    $new = $old->setValue(2);
+    assert($old->getValue() === 2);
+```
+
+#### Good :
+
+```php
+    class MyValueObject
+    {
+        private int $value;
+        public function __construct(int $value)
+        {
+            $this->value = $value;
+        }
+        public function getValue(): int
+        {
+            return $this->value;
+        }
+        public function withValue(int $value): self
+        {
+            return new MyValueObject($value);
+        }
+    }
+    $old = new MyValueObject(1);
+    $new = $old->withValue(2);
+    assert($old->getValue() === 1);
+```
 
 ## Helper
 
