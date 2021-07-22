@@ -596,12 +596,12 @@ Eloquent allows you to write readable and maintainable code. Also, Eloquent has 
 SELECT *
 FROM `articles`
 WHERE EXISTS (SELECT *
-			  FROM `users`
-			  WHERE `articles`.`user_id` = `users`.`id`
-			  AND EXISTS (SELECT *
-						  FROM `profiles`
-						  WHERE `profiles`.`user_id` = `users`.`id`)
-			  AND `users`.`deleted_at` IS NULL)
+			FROM `users`
+			WHERE `articles`.`user_id` = `users`.`id`
+			AND EXISTS (SELECT *
+					  FROM `profiles`
+					  WHERE `profiles`.`user_id` = `users`.`id`)
+			AND `users`.`deleted_at` IS NULL)
 AND `verified` = '1'
 AND `active` = '1'
 ORDER BY `created_at` DESC
@@ -639,8 +639,6 @@ $category->article()->create($request->all());
 
 ### Use config and language files, constants instead of text in the code
 
-Put all DB related logic into Eloquent models or into Repository classes if you’re using Query Builder or raw SQL queries.
-
 #### Bad :
 
 ```php
@@ -665,7 +663,7 @@ return back()->with('message', __('app.article_added'));
 
 ### Use IoC container or facades instead of new Class
 
-new Class syntax creates tight coupling between classes and complicates testing. Use IoC container or facades instead.
+New class syntax creates tight coupling between classes and complicates testing. Use IoC container or facades instead.
 
 #### Bad :
 
@@ -1293,9 +1291,44 @@ Route::middleware(['auth'])->group(function(){
 
 ## Request
 
-### Validation
-
 Move validation from controllers to Request classes.
+
+#### Bad :
+
+```php
+public function store(Request $request)
+{
+	$request->validate([
+		'title' => ['required','unique:posts','max:255'],
+		'body' => ['required'],
+		'publish_at' => ['nullable','date'],
+	]);
+}
+```
+
+#### Good :
+
+```php
+public function store(PostRequest $request)
+{
+	....
+}
+
+class PostRequest extends Request
+{
+	public function rules()
+	{
+		return [
+			'title' => ['required','unique:posts','max:255'],
+			'body' => ['required'],
+			'publish_at' => ['nullable','date'],
+		];
+	}
+}
+```
+
+When using multiple rules for one field in a form request, avoid using |, always use array notation. 
+Using an array notation will make it easier to apply custom rule classes to a field.
 
 #### Bad :
 
@@ -1323,9 +1356,9 @@ class PostRequest extends Request
 	public function rules()
 	{
 		return [
-			'title' => 'required|unique:posts|max:255',
-			'body' => 'required',
-			'publish_at' => 'nullable|date',
+			'title' => ['required','unique:posts','max:255'],
+			'body' => ['required'],
+			'publish_at' => ['nullable','date'],
 		];
 	}
 }
