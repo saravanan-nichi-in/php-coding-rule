@@ -110,18 +110,18 @@ Classes have their own documentation block describing the classes purpose.
 #### Example :
 
 ```php
-	/**
-	 * First sentence is short description. Then you can write more, just as you like
-	 *
-	 * Here may follow some detailed description about what the class is for.
-	 *
-	 * Paragraphs are separated by an empty line.
-	 *
-	 */
-	class SomeClass
-	{
-	 ...
-	}
+/**
+ * First sentence is short description. Then you can write more, just as you like
+ *
+ * Here may follow some detailed description about what the class is for.
+ *
+ * Paragraphs are separated by an empty line.
+ *
+ */
+class SomeClass
+{
+ ...
+}
 ```
 
 ### Properties
@@ -131,12 +131,12 @@ Properties of class such as variables, constants, includes should be documented 
 #### Example :
 
 ```php
-	/**
-	 * A short description, very much recommended
-	 *
-	 * @var string
-	 */
-	protected $title = 'Untitled';
+/**
+ * A short description, very much recommended
+ *
+ * @var string
+ */
+protected $title = 'Untitled';
 ```
 
 ### Method
@@ -146,20 +146,20 @@ Parameters and the return value should only be documented
 #### Example :
 
 ```php
-	/**
-	 * A description for this method
-	 *
-	 * Paragraphs are separated by an empty line.
-	 *
-	 * @param Post $post Some description for the $post parameter
-	 * @param string $someString Some description for the $someString parameter
-	 * @return void
-	 *
-	 */
-	public function addStringToPost(Post $post, string $someString): void
-	{
-	 ...
-	}
+/**
+ * A description for this method
+ *
+ * Paragraphs are separated by an empty line.
+ *
+ * @param Post $post Some description for the $post parameter
+ * @param string $someString Some description for the $someString parameter
+ * @return void
+ *
+ */
+public function addStringToPost(Post $post, string $someString): void
+{
+ ...
+}
 ```
 
 ### Testcase
@@ -169,16 +169,16 @@ Testcases need to be marked as being a test and can have some more annotations.
 #### Example :
 
 ```php
-	/**
-	 * This method is part of the public API.
-	 *
-	 * @return void
-	 * @api
-	 */
-	public function fooBar(): void
-	{
-	 ...
-	}
+/**
+ * This method is part of the public API.
+ *
+ * @return void
+ * @api
+ */
+public function fooBar(): void
+{
+ ...
+}
 ```
 
 ## Naming
