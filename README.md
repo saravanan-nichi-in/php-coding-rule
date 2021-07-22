@@ -11,11 +11,14 @@ Last updated at 19 Jul 2021
 5. [Naming](https://github.com/saravanan-nichi-in/laravel-coding-rule#naming)
 6. [Rules](https://github.com/saravanan-nichi-in/laravel-coding-rule#rules)
 7. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
-8. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
-9. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
-10. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
-11. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
-12. [Model](https://github.com/saravanan-nichi-in/laravel-coding-rule#model-1)
+8. [Service Provider](https://github.com/saravanan-nichi-in/laravel-coding-rule#service-provider)
+9. [Dependency Injection](https://github.com/saravanan-nichi-in/laravel-coding-rule#dependency-injection)
+10. [Facades](https://github.com/saravanan-nichi-in/laravel-coding-rule#facades)
+11. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
+12. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
+13. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
+14. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
+15. [Model](https://github.com/saravanan-nichi-in/laravel-coding-rule#model-1)
 
 
 ## Validation
@@ -651,7 +654,7 @@ Pass the data to config files instead and then use the config() helper function 
 
 ### Object Creation
 
-Make it immutable as much as possible. Especially Value Object
+Make it immutable as much as possible.
 
 #### Bad :
 
@@ -736,6 +739,51 @@ Make it immutable as much as possible. Especially Value Object
     assert($old->getValue() === 1);
 ```
 
+### Condition
+
+Reduce nesting with early return, continue, break, etc. else is not necessary in most cases
+
+#### Bad :
+
+```php
+	if ($someCondition) {
+		
+	} else {
+		return null;
+	}
+```
+
+#### Good :
+
+```php
+	if ($someCondition) {
+		return null;
+	}
+```
+
+### Package
+
+When using two or more classes with the same name, add as to shorten them.
+
+#### Bad :
+
+```php
+	use Illuminate\Support\Collection;
+	// ...
+	$values = Collection::make([1, 2, 3]);
+	$models = \Illuminate\Database\Eloquent\Collection::make($modelArray)
+```
+
+#### Good :
+
+```php
+	use Illuminate\Support\Collection;
+	use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+	// ...
+	$values = Collection::make([1, 2, 3]);
+	$models = EloquentCollection::make($modelArray);
+```
+
 ## Helper
 
 Try to consume helper function as possible.
@@ -758,6 +806,115 @@ Session::put('cart', $data)
 session('cart');
 
 session(['cart' => $data])
+```
+
+## Service Provider
+
+Avoid designs that replace Service Provider and interface bindings according to the request information. That in such cases, use Contextual Binding.
+
+#### Bad :
+
+```php
+	class AppServiceProvider extends ServiceProvider
+	{
+		public function register()
+		{
+			$this->app->bind(
+				CommentRepositoryInterface::class,
+				CommentReadRepository::class
+			);
+		}
+	}
+	class CommentsController
+	{
+		public function find(int $commentId, ReadCommentService $service)
+		{
+			$comment = $service->find($commentId);
+		}
+		public function store(StoreCommentRequest $request, StoreCommentService $service)
+		{
+			app()->bind(CommentRepositoryInterface::class, CommentWriteRepository::class);
+			$comment = $service->store($request->user(), $request->validated());
+		}
+	}
+```
+
+#### Good :
+
+```php
+	class AppServiceProvider extends ServiceProvider
+	{
+		public function register()
+		{
+			$this->app->bind(CommentRepositoryInterface::class, CommentReadRepository::class);
+			$this->app->when(StoreCommentService::class)->needs(CommentRepositoryInterface::class)->give(CommentWriteRepository::class);
+		}
+	}
+	class CommentsController
+	{
+		public function find(int $commentId, ReadCommentService $service)
+		{
+			$comment = $service->find($commentId);
+		}
+		public function store(StoreCommentRequest $request, StoreCommentService $service)
+		{
+			$comment = $service->store($request->user(), $request->validated());
+		}
+	}
+```
+
+## Dependency Injection
+
+Avoid app () and App :: make () as much as possible except for service providers and test code.
+
+#### Bad :
+
+```php
+	class HogeService
+	{
+		
+	}
+	class HogeController
+	{
+		private HogeService $service;
+		public function __construct()
+		{
+			$this->service = app(HogeService::class);
+		}
+	}
+```
+
+#### Good :
+
+```php
+	class HogeService
+	{
+		
+	}
+	class HogeController
+	{
+		private HogeService $service;
+		public function __construct(HogeService $service)
+		{
+			$this->service = $service;
+		}
+	}
+```
+
+## Facades
+
+Avoid using Facade as much as possible. If there is no corresponding helper function, Facade is fine.
+
+#### Bad :
+
+```php
+	$hoge = Config::get('fuga.hoge');
+```
+
+#### Good :
+
+```php
+	$hoge = config('fuga.hoge');
 ```
 
 ### Request
