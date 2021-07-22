@@ -762,6 +762,22 @@ if ($someCondition) {
 }
 ```
 
+### Carbon
+
+#### Bad :
+
+```php
+Carbon::now()
+Carbon::today()
+```
+
+#### Good :
+
+```php
+now()
+today()
+```
+
 ### Package
 
 When using two or more classes with the same name, add as to shorten them.
@@ -1094,94 +1110,6 @@ $hoge = Config::get('fuga.hoge');
 $hoge = config('fuga.hoge');
 ```
 
-### Request
-
-#### Bad :
-
-```php
-$request->input('name');
-Request::get('name')
-$request->has('value') ? $request->value : 'default';
-```
-
-#### Good :
-
-```php
-$request->name;
-request('name')
-$request->get('value', 'default')
-```
-
-### Redirect
-
-#### Bad :
-
-```php
-return Redirect::back()
-```
-
-#### Good :
-
-```php
-return back()
-```
-
-### View
-
-#### Bad :
-
-```php
-return view('index')->with('title', $title)->with('client', $client)
-```
-
-#### Good :
-
-```php
-return view('index', compact('title', 'client'))
-```
-
-### Carbon
-
-#### Bad :
-
-```php
-Carbon::now()
-Carbon::today()
-```
-
-#### Good :
-
-```php
-now()
-today()
-```
-
-
-### Eloquent
-
-#### Bad :
-
-```php
-->where('column', '=', 1)
-->orderBy('created_at', 'desc')
-->orderBy('age', 'desc')
-->orderBy('created_at', 'asc')
-->select('id', 'name')->get()
-->first()->name
-```
-
-#### Good :
-
-```php
-->where('column', 1)
-->latest()
-->latest('age')
-->oldest()
-->get(['id', 'name'])
-->value('name')
-```
-
-
 ## Routing
 
 ### Prefix grouping
@@ -1202,6 +1130,18 @@ Route::prefix('api')->group(function(){
 	Route::get('/post', 'PostController@index');
 
 });
+```
+
+#### Bad :
+
+```php
+return Redirect::back()
+```
+
+#### Good :
+
+```php
+return back()
 ```
 
 ## Middleware
@@ -1291,6 +1231,22 @@ class PostRequest extends Request
 }
 ```
 
+#### Bad :
+
+```php
+$request->input('name');
+Request::get('name')
+$request->has('value') ? $request->value : 'default';
+```
+
+#### Good :
+
+```php
+$request->name;
+request('name')
+$request->get('value', 'default')
+```
+
 ### Fillable and Guarded
 
 Try to implement guarded instead of Fillable.
@@ -1337,6 +1293,18 @@ $users = User::with('profile')->get();
 @endforeach
 ```
 
+#### Bad :
+
+```php
+return view('index')->with('title', $title)->with('client', $client)
+```
+
+#### Good :
+
+```php
+return view('index', compact('title', 'client'))
+```
+
 ## Eloquent
 
 ### Query Scopes
@@ -1369,7 +1337,6 @@ $active_administrators = User::active()->admin()->get();
 
 Priority is given to Eloquent Builder instead of Query Builder. Take advantage of the Eloquent Model relationship.
 
-
 #### Bad :
 
 ```php
@@ -1382,4 +1349,28 @@ $posts = DB:table('posts')->where('author_id', $author->id)->get();
 $posts = Post::where('author_id', $author->id)->get();
 
 $posts = $author->posts;
+```
+
+#### Methods :
+
+#### Bad :
+
+```php
+->where('column', '=', 1)
+->orderBy('created_at', 'desc')
+->orderBy('age', 'desc')
+->orderBy('created_at', 'asc')
+->select('id', 'name')->get()
+->first()->name
+```
+
+#### Good :
+
+```php
+->where('column', 1)
+->latest()
+->latest('age')
+->oldest()
+->get(['id', 'name'])
+->value('name')
 ```
