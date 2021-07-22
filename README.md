@@ -19,7 +19,7 @@ Last updated at 19 Jul 2021
 13. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
 14. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
 15. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
-16. [Model](https://github.com/saravanan-nichi-in/laravel-coding-rule#model-1)
+16. [Eloquent](https://github.com/saravanan-nichi-in/laravel-coding-rule#eloquent)
 
 
 ## Validation
@@ -1337,7 +1337,7 @@ $users = User::with('profile')->get();
 @endforeach
 ```
 
-## Model
+## Eloquent
 
 ### Query Scopes
 
@@ -1363,4 +1363,23 @@ public function scopeAdmin($query)
 }
 
 $active_administrators = User::active()->admin()->get();
+```
+
+### Query Builder
+
+Priority is given to Eloquent Builder instead of Query Builder. Take advantage of the Eloquent Model relationship.
+
+
+#### Bad :
+
+```php
+$posts = DB:table('posts')->where('author_id', $author->id)->get();
+```
+
+#### Good :
+
+```php
+$posts = Post::where('author_id', $author->id)->get();
+
+$posts = $author->posts;
 ```
