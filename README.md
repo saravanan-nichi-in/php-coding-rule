@@ -192,18 +192,18 @@ A class name should follow PascalCase.
 #### Bad :
 
 ```php
-	class logincontroller extends Controller { }
-	class loginController extends Controller { }
-	class Logincontroller extends Controller { }	
+class logincontroller extends Controller { }
+class loginController extends Controller { }
+class Logincontroller extends Controller { }	
 ```
 
 #### Good :
 
 ```php
-	class LoginController extends Controller
-	{
+class LoginController extends Controller
+{
 
-	}
+}
 ```
 
 ### Others
@@ -233,18 +233,18 @@ A method name should follow camelCase. Only the characters a-z, A-Z and 0-9 are 
 #### Bad :
 
 ```php
-	public function userregistration(){}
-	public function Userregistration(){}
-	public function user-registration(){}
+public function userregistration(){}
+public function Userregistration(){}
+public function user-registration(){}
 ```
 
 #### Good :
 
 ```php
-        public function userRegistration()
-	{
+public function userRegistration()
+{
 
-	}
+}
 ```
 
 ### Function
@@ -254,18 +254,18 @@ A function name should follow snake_case.
 #### Bad :
 
 ```php
-	public function abortIf(){}
-	public function abortif(){}
-	public function abort-If(){}
+public function abortIf(){}
+public function abortif(){}
+public function abort-If(){}
 ```
 
 #### Good :
 
 ```php
-        public function abort_if()
-	{
+public function abort_if()
+{
 
-	}
+}
 ```
 
 ### Variable
@@ -275,15 +275,15 @@ A variable name should follow camelCase.
 #### Bad :
 
 ```php
-	$myfirstvariable = null;
-	$Myfirstvariable = null;
-	$my-first-variable = null;
+$myfirstvariable = null;
+$Myfirstvariable = null;
+$my-first-variable = null;
 ```
 
 #### Good :
 
 ```php
-        $myFirstVariable = null;
+$myFirstVariable = null;
 ```
 
 ### Model
@@ -293,15 +293,15 @@ A model property name should follow snake_case.
 #### Bad :
 
 ```php
-	$model->modelProperty;
-	$model->model-property;
-	$model->ModelProperty;
+$model->modelProperty;
+$model->model-property;
+$model->ModelProperty;
 ```
 
 #### Good :
 
 ```php
-        $model->model_property
+$model->model_property
 ```
 
 ### Constant
@@ -311,16 +311,16 @@ A constant name should follow UPPERCASE. Words can be separated by underscore ( 
 #### Bad :
 
 ```php
-	myconstant = null;
-	MyConstant = null;
-	My-Constant = null;
-	my-constant = null;	
+myconstant = null;
+MyConstant = null;
+My-Constant = null;
+my-constant = null;	
 ```
 
 #### Good :
 
 ```php
-        MY_CONSTANT = null;
+MY_CONSTANT = null;
 ```
 
 ### Filename
@@ -330,15 +330,15 @@ A filename name should follow UpperCamelCase.
 #### Bad :
 
 ```php
-	app/Http/Controllers/Auth/myLoginController.php
-	app/Http/Controllers/Auth/mylogincontroller.php	
-	app/Http/Controllers/Auth/my-login-controller.php	
+app/Http/Controllers/Auth/myLoginController.php
+app/Http/Controllers/Auth/mylogincontroller.php	
+app/Http/Controllers/Auth/my-login-controller.php	
 ```
 
 #### Good :
 
 ```php
-	app/Http/Controllers/Auth/MyLoginController.php
+app/Http/Controllers/Auth/MyLoginController.php
 ```
 
 ### Others
@@ -364,38 +364,38 @@ A class and a method should have only one responsibility.
 #### Bad :
 
 ```php
-   public function getFullNameAttribute()
-    {
-        if (auth()->user() && auth()->user()->hasRole('client') && auth()->user()->isVerified()) {
-            return 'Mr. ' . $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
-        } else {
-            return $this->first_name[0] . '. ' . $this->last_name;
-        }
-    }
+public function getFullNameAttribute()
+{
+	if (auth()->user() && auth()->user()->hasRole('client') && auth()->user()->isVerified()) {
+		return 'Mr. ' . $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+	} else {
+		return $this->first_name[0] . '. ' . $this->last_name;
+	}
+}
 ```
 
 #### Good :
 
 ```php
-    public function getFullNameAttribute()
-    {
-        return $this->isVerifiedClient() ? $this->getFullNameLong() : $this->getFullNameShort();
-    }
+public function getFullNameAttribute()
+{
+	return $this->isVerifiedClient() ? $this->getFullNameLong() : $this->getFullNameShort();
+}
 
-    public function isVerifiedClient()
-    {
-        return auth()->user() && auth()->user()->hasRole('client') && auth()->user()->isVerified();
-    }
+public function isVerifiedClient()
+{
+	return auth()->user() && auth()->user()->hasRole('client') && auth()->user()->isVerified();
+}
 
-    public function getFullNameLong()
-    {
-        return 'Mr. ' . $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
-    }
+public function getFullNameLong()
+{
+	return 'Mr. ' . $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+}
 
-    public function getFullNameShort()
-    {
-        return $this->first_name[0] . '. ' . $this->last_name;
-    }
+public function getFullNameShort()
+{
+	return $this->first_name[0] . '. ' . $this->last_name;
+}
 ```
 
 ### Business logic should be in service class
@@ -405,36 +405,35 @@ A controller must have only one responsibility, so move business logic from cont
 #### Bad :
 
 ```php
-   public function store(Request $request)
-    {
-        if ($request->hasFile('image')) {
-            $request->file('image')->move(public_path('images') . 'temp');
-        }
+public function store(Request $request)
+{
+	if ($request->hasFile('image')) {
+		$request->file('image')->move(public_path('images') . 'temp');
+	}
 
-        ....
-    }
+	....
+}
 ```
 
 #### Good :
 
 ```php
-    public function store(Request $request)
-    {
-        $this->articleService->handleUploadedImage($request->file('image'));
+public function store(Request $request)
+{
+	$this->articleService->handleUploadedImage($request->file('image'));
 
-        ....
-    }
+	....
+}
 
-    class ArticleService
-    {
-        public function handleUploadedImage($image)
-        {
-            if (!is_null($image)) {
-                $image->move(public_path('images') . 'temp');
-            }
-        }
-    }
-    
+class ArticleService
+{
+	public function handleUploadedImage($image)
+	{
+		if (!is_null($image)) {
+			$image->move(public_path('images') . 'temp');
+		}
+	}
+}
 ```
 
 ### Donâ€™t repeat yourself (DRY)
@@ -444,38 +443,38 @@ Reuse code when you can. SRP is helping you to avoid duplication. Also, reuse Bl
 #### Bad :
 
 ```php
-   public function getActive()
-    {
-        return $this->where('verified', 1)->whereNotNull('deleted_at')->get();
-    }
+public function getActive()
+{
+	return $this->where('verified', 1)->whereNotNull('deleted_at')->get();
+}
 
-    public function getArticles()
-    {
-        return $this->whereHas('user', function ($q) {
-                $q->where('verified', 1)->whereNotNull('deleted_at');
-            })->get();
-    }
+public function getArticles()
+{
+	return $this->whereHas('user', function ($q) {
+			$q->where('verified', 1)->whereNotNull('deleted_at');
+		})->get();
+}
 ```
 
 #### Good :
 
 ```php
-    public function scopeActive($q)
-    {
-        return $q->where('verified', 1)->whereNotNull('deleted_at');
-    }
+public function scopeActive($q)
+{
+	return $q->where('verified', 1)->whereNotNull('deleted_at');
+}
 
-    public function getActive()
-    {
-        return $this->active()->get();
-    }
+public function getActive()
+{
+	return $this->active()->get();
+}
 
-    public function getArticles()
-    {
-        return $this->whereHas('user', function ($q) {
-                $q->active();
-            })->get();
-    }
+public function getArticles()
+{
+	return $this->whereHas('user', function ($q) {
+			$q->active();
+		})->get();
+}
 ```
 
 ### Fat models, skinny controllers
@@ -485,37 +484,37 @@ Put all DB related logic into Eloquent models or into Repository classes if youâ
 #### Bad :
 
 ```php
-   public function index()
-    {
-        $clients = Client::verified()
-            ->with(['orders' => function ($q) {
-                $q->where('created_at', '>', today()->subWeek());
-            }])
-            ->get();
+public function index()
+{
+	$clients = Client::verified()
+		->with(['orders' => function ($q) {
+			$q->where('created_at', '>', today()->subWeek());
+		}])
+		->get();
 
-        return view('index', ['clients' => $clients]);
-    }
+	return view('index', ['clients' => $clients]);
+}
 ```
 
 #### Good :
 
 ```php
-    public function index()
-    {
-        return view('index', ['clients' => $this->client->getWithNewOrders()]);
-    }
+public function index()
+{
+	return view('index', ['clients' => $this->client->getWithNewOrders()]);
+}
 
-    class Client extends Model
-    {
-        public function getWithNewOrders()
-        {
-            return $this->verified()
-                ->with(['orders' => function ($q) {
-                    $q->where('created_at', '>', today()->subWeek());
-                }])
-                ->get();
-        }
-    }
+class Client extends Model
+{
+	public function getWithNewOrders()
+	{
+		return $this->verified()
+			->with(['orders' => function ($q) {
+				$q->where('created_at', '>', today()->subWeek());
+			}])
+			->get();
+	}
+}
 ```
 
 ### Comment your code, but prefer descriptive method and variable names over comments
@@ -525,13 +524,13 @@ Put all DB related logic into Eloquent models or into Repository classes if youâ
 #### Bad :
 
 ```php
-  if (count((array) $builder->getQuery()->joins) > 0)
+if (count((array) $builder->getQuery()->joins) > 0)
 ```
 
 #### Good :
 
 ```php
-    if ($this->hasJoins())
+if ($this->hasJoins())
 ```
 
 ### Prefer to use Eloquent over using Query Builder and raw SQL queries. Prefer collections over arrays
@@ -541,24 +540,24 @@ Eloquent allows you to write readable and maintainable code. Also, Eloquent has 
 #### Bad :
 
 ```php
-   SELECT *
-    FROM `articles`
-    WHERE EXISTS (SELECT *
-                  FROM `users`
-                  WHERE `articles`.`user_id` = `users`.`id`
-                  AND EXISTS (SELECT *
-                              FROM `profiles`
-                              WHERE `profiles`.`user_id` = `users`.`id`)
-                  AND `users`.`deleted_at` IS NULL)
-    AND `verified` = '1'
-    AND `active` = '1'
-    ORDER BY `created_at` DESC
+SELECT *
+FROM `articles`
+WHERE EXISTS (SELECT *
+			  FROM `users`
+			  WHERE `articles`.`user_id` = `users`.`id`
+			  AND EXISTS (SELECT *
+						  FROM `profiles`
+						  WHERE `profiles`.`user_id` = `users`.`id`)
+			  AND `users`.`deleted_at` IS NULL)
+AND `verified` = '1'
+AND `active` = '1'
+ORDER BY `created_at` DESC
 ```
 
 #### Good :
 
 ```php
-    Article::has('user.profile')->verified()->latest()->get();
+Article::has('user.profile')->verified()->latest()->get();
 ```
 
 ### Mass assignment
@@ -568,20 +567,21 @@ Eloquent allows you to write readable and maintainable code. Also, Eloquent has 
 #### Bad :
 
 ```php
-   $article = new Article;
-    $article->title = $request->title;
-    $article->content = $request->content;
-    $article->verified = $request->verified;
-    // Add category to article
-    $article->category_id = $category->id;
-    $article->save();
+$article = new Article;
+$article->title = $request->title;
+$article->content = $request->content;
+$article->verified = $request->verified;
+
+// Add category to article
+$article->category_id = $category->id;
+$article->save();
 ```
 
 
 #### Good :
 
 ```php
-    $category->article()->create($request->all());
+$category->article()->create($request->all());
 ```
 
 ### Use config and language files, constants instead of text in the code
@@ -591,23 +591,23 @@ Put all DB related logic into Eloquent models or into Repository classes if youâ
 #### Bad :
 
 ```php
-    public function isNormal()
-    {
-        return $article->type === 'normal';
-    }
+public function isNormal()
+{
+	return $article->type === 'normal';
+}
 
-    return back()->with('message', 'Your article has been added!');
+return back()->with('message', 'Your article has been added!');
 ```
 
 #### Good :
 
 ```php
-    public function isNormal()
-    {
-        return $article->type === Article::TYPE_NORMAL;
-    }
+public function isNormal()
+{
+	return $article->type === Article::TYPE_NORMAL;
+}
 
-    return back()->with('message', __('app.article_added'));
+return back()->with('message', __('app.article_added'));
 ```
 
 ### Use IoC container or facades instead of new Class
@@ -617,19 +617,19 @@ new Class syntax creates tight coupling between classes and complicates testing.
 #### Bad :
 
 ```php
-    $user = new User;
-    $user->create($request->all());
+$user = new User;
+$user->create($request->all());
 ```
 
 #### Good :
 
 ```php
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+public function __construct(User $user)
+{
+	$this->user = $user;
+}
 
-    $this->user->create($request->all());
+$this->user->create($request->all());
 ```
 
 ### Do not get data from the ".env"-file directly
@@ -639,17 +639,17 @@ Pass the data to config files instead and then use the config() helper function 
 #### Bad :
 
 ```php
-    $apiKey = env('API_KEY');
+$apiKey = env('API_KEY');
 ```
 
 #### Good :
 
 ```php
-    // config/api.php
-    'key' => env('API_KEY'),
+// config/api.php
+'key' => env('API_KEY'),
 
-    // Use the data
-    $apiKey = config('api.key');
+// Use the data
+$apiKey = config('api.key');
 ```
 
 ### Object Creation
@@ -659,84 +659,84 @@ Make it immutable as much as possible.
 #### Bad :
 
 ```php
-    class MyClass
-    {
-        private ?Fuga $fuga = null;
-        public function setFuga(Fuga $fuga): void
-        {
-            $this->fuga = $fuga;
-        }
-    }
+class MyClass
+{
+	private ?Fuga $fuga = null;
+	public function setFuga(Fuga $fuga): void
+	{
+		$this->fuga = $fuga;
+	}
+}
 
-    $myObject = new MyClass();
-    $myObject->setHoge($fuga);
+$myObject = new MyClass();
+$myObject->setHoge($fuga);
 ```
 
 #### Good :
 
 ```php
-    class MyClass
-    {
-        private Fuga $fuga;
-        public function __construct(Fuga $fuga)
-        {
-            $this->fuga = $fuga;
-        }
-    }
+class MyClass
+{
+	private Fuga $fuga;
+	public function __construct(Fuga $fuga)
+	{
+		$this->fuga = $fuga;
+	}
+}
 
-    $myObject = new MyClass($fuga);
+$myObject = new MyClass($fuga);
 ```
 
 #### Bad :
 
 ```php
-    class MyValueObject
-    {
-        private int $value;
-        public function __construct(int $value)
-        {
-            $this->value = $value;
-        }
+class MyValueObject
+{
+	private int $value;
+	public function __construct(int $value)
+	{
+		$this->value = $value;
+	}
 
-        public function getValue(): int
-        {
-            return $this->value;
-        }
+	public function getValue(): int
+	{
+		return $this->value;
+	}
 
-        public function setValue(int $value): self
-        {
-            $this->value = $value;
-            return $this;
-        }
+	public function setValue(int $value): self
+	{
+		$this->value = $value;
+		return $this;
+	}
 
-    }
-    $old = new MyValueObject(1);
-    $new = $old->setValue(2);
-    assert($old->getValue() === 2);
+}
+$old = new MyValueObject(1);
+$new = $old->setValue(2);
+assert($old->getValue() === 2);
 ```
 
 #### Good :
 
 ```php
-    class MyValueObject
-    {
-        private int $value;
-        public function __construct(int $value)
-        {
-            $this->value = $value;
-        }
-        public function getValue(): int
-        {
-            return $this->value;
-        }
-        public function withValue(int $value): self
-        {
-            return new MyValueObject($value);
-        }
-    }
-    $old = new MyValueObject(1);
-    $new = $old->withValue(2);
-    assert($old->getValue() === 1);
+class MyValueObject
+{
+	private int $value;
+	public function __construct(int $value)
+	{
+		$this->value = $value;
+	}
+	public function getValue(): int
+	{
+		return $this->value;
+	}
+	public function withValue(int $value): self
+	{
+		return new MyValueObject($value);
+	}
+}
+$old = new MyValueObject(1);
+$new = $old->withValue(2);
+assert($old->getValue() === 1);
 ```
 
 ### Condition
@@ -746,19 +746,19 @@ Reduce nesting with early return, continue, break, etc. else is not necessary in
 #### Bad :
 
 ```php
-	if ($someCondition) {
-		
-	} else {
-		return null;
-	}
+if ($someCondition) {
+
+} else {
+	return null;
+}
 ```
 
 #### Good :
 
 ```php
-	if ($someCondition) {
-		return null;
-	}
+if ($someCondition) {
+	return null;
+}
 ```
 
 ### Package
@@ -768,20 +768,20 @@ When using two or more classes with the same name, add as to shorten them.
 #### Bad :
 
 ```php
-	use Illuminate\Support\Collection;
-	// ...
-	$values = Collection::make([1, 2, 3]);
-	$models = \Illuminate\Database\Eloquent\Collection::make($modelArray)
+use Illuminate\Support\Collection;
+// ...
+$values = Collection::make([1, 2, 3]);
+$models = \Illuminate\Database\Eloquent\Collection::make($modelArray)
 ```
 
 #### Good :
 
 ```php
-	use Illuminate\Support\Collection;
-	use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-	// ...
-	$values = Collection::make([1, 2, 3]);
-	$models = EloquentCollection::make($modelArray);
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+// ...
+$values = Collection::make([1, 2, 3]);
+$models = EloquentCollection::make($modelArray);
 ```
 
 ## Helper
@@ -815,52 +815,52 @@ Avoid designs that replace Service Provider and interface bindings according to 
 #### Bad :
 
 ```php
-	class AppServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
+{
+	public function register()
 	{
-		public function register()
-		{
-			$this->app->bind(
-				CommentRepositoryInterface::class,
-				CommentReadRepository::class
-			);
-		}
+		$this->app->bind(
+			CommentRepositoryInterface::class,
+			CommentReadRepository::class
+		);
 	}
-	class CommentsController
+}
+class CommentsController
+{
+	public function find(int $commentId, ReadCommentService $service)
 	{
-		public function find(int $commentId, ReadCommentService $service)
-		{
-			$comment = $service->find($commentId);
-		}
-		public function store(StoreCommentRequest $request, StoreCommentService $service)
-		{
-			app()->bind(CommentRepositoryInterface::class, CommentWriteRepository::class);
-			$comment = $service->store($request->user(), $request->validated());
-		}
+		$comment = $service->find($commentId);
 	}
+	public function store(StoreCommentRequest $request, StoreCommentService $service)
+	{
+		app()->bind(CommentRepositoryInterface::class, CommentWriteRepository::class);
+		$comment = $service->store($request->user(), $request->validated());
+	}
+}
 ```
 
 #### Good :
 
 ```php
-	class AppServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
+{
+	public function register()
 	{
-		public function register()
-		{
-			$this->app->bind(CommentRepositoryInterface::class, CommentReadRepository::class);
-			$this->app->when(StoreCommentService::class)->needs(CommentRepositoryInterface::class)->give(CommentWriteRepository::class);
-		}
+		$this->app->bind(CommentRepositoryInterface::class, CommentReadRepository::class);
+		$this->app->when(StoreCommentService::class)->needs(CommentRepositoryInterface::class)->give(CommentWriteRepository::class);
 	}
-	class CommentsController
+}
+class CommentsController
+{
+	public function find(int $commentId, ReadCommentService $service)
 	{
-		public function find(int $commentId, ReadCommentService $service)
-		{
-			$comment = $service->find($commentId);
-		}
-		public function store(StoreCommentRequest $request, StoreCommentService $service)
-		{
-			$comment = $service->store($request->user(), $request->validated());
-		}
+		$comment = $service->find($commentId);
 	}
+	public function store(StoreCommentRequest $request, StoreCommentService $service)
+	{
+		$comment = $service->store($request->user(), $request->validated());
+	}
+}
 ```
 
 ## Dependency Injection
@@ -870,35 +870,35 @@ Avoid app () and App :: make () as much as possible except for service providers
 #### Bad :
 
 ```php
-	class HogeService
+class HogeService
+{
+
+}
+class HogeController
+{
+	private HogeService $service;
+	public function __construct()
 	{
-		
+		$this->service = app(HogeService::class);
 	}
-	class HogeController
-	{
-		private HogeService $service;
-		public function __construct()
-		{
-			$this->service = app(HogeService::class);
-		}
-	}
+}
 ```
 
 #### Good :
 
 ```php
-	class HogeService
+class HogeService
+{
+
+}
+class HogeController
+{
+	private HogeService $service;
+	public function __construct(HogeService $service)
 	{
-		
+		$this->service = $service;
 	}
-	class HogeController
-	{
-		private HogeService $service;
-		public function __construct(HogeService $service)
-		{
-			$this->service = $service;
-		}
-	}
+}
 ```
 
 ## Facades
@@ -908,13 +908,13 @@ Avoid using Facade as much as possible. If there is no corresponding helper func
 #### Bad :
 
 ```php
-	$hoge = Config::get('fuga.hoge');
+$hoge = Config::get('fuga.hoge');
 ```
 
 #### Good :
 
 ```php
-	$hoge = config('fuga.hoge');
+$hoge = config('fuga.hoge');
 ```
 
 ### Request
@@ -1083,37 +1083,35 @@ Move validation from controllers to Request classes.
 #### Bad :
 
 ```php
-   public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|unique:posts|max:255',
-            'body' => 'required',
-            'publish_at' => 'nullable|date',
-        ]);
-
-        ....
-    }
+public function store(Request $request)
+{
+	$request->validate([
+		'title' => 'required|unique:posts|max:255',
+		'body' => 'required',
+		'publish_at' => 'nullable|date',
+	]);
+}
 ```
 
 #### Good :
 
 ```php
-    public function store(PostRequest $request)
-    {
-        ....
-    }
+public function store(PostRequest $request)
+{
+	....
+}
 
-    class PostRequest extends Request
-    {
-        public function rules()
-        {
-            return [
-                'title' => 'required|unique:posts|max:255',
-                'body' => 'required',
-                'publish_at' => 'nullable|date',
-            ];
-        }
-    }
+class PostRequest extends Request
+{
+	public function rules()
+	{
+		return [
+			'title' => 'required|unique:posts|max:255',
+			'body' => 'required',
+			'publish_at' => 'nullable|date',
+		];
+	}
+}
 ```
 
 ### Fillable and Guarded
@@ -1123,17 +1121,17 @@ Try to implement guarded instead of Fillable.
 #### Bad :
 
 ```php
-   protected $fillable=[
-        'id', 'quotation_id', 'order_loss_date', 'scheduled_delivery_date','expected_return_date',
-        'created_operator_id', 'payment_type', 'billing_start', 'billing_end', 'unbilled_confirmation',
-        'remarks', 'created_at', 'updated_operator_id', 'updated_at'
-    ];
+protected $fillable=[
+	'id', 'quotation_id', 'order_loss_date', 'scheduled_delivery_date','expected_return_date',
+	'created_operator_id', 'payment_type', 'billing_start', 'billing_end', 'unbilled_confirmation',
+	'remarks', 'created_at', 'updated_operator_id', 'updated_at'
+];
 ```
 
 #### Good :
 
 ```php
-    protected $guarded = ['project_id'];
+protected $guarded = ['project_id'];
 ```
 
 ## Views
@@ -1145,21 +1143,21 @@ Do not execute queries in Blade templates and use eager loading (N + 1 problem).
 #### Bad :
 
 ```php
-   @foreach (User::all() as $user)
-	
-    @endforeach
+@foreach (User::all() as $user)
+
+@endforeach
 ```
 
 #### Good :
 
 ```php
-    $users = User::with('profile')->get();
+$users = User::with('profile')->get();
 
-    ...
+...
 
-    @foreach ($users as $user)
+@foreach ($users as $user)
 
-    @endforeach
+@endforeach
 ```
 
 ## Model
@@ -1171,23 +1169,21 @@ Query scopes are useful to make code more elegant.
 #### without Query Scope :
 
 ```php
-
-   $active_administrators = User::where('active', '=', 1)->where('is_admin', '=', 1)->get();
-   
+$active_administrators = User::where('active', '=', 1)->where('is_admin', '=', 1)->get();
 ```
 
 #### with Query Scope :
 
 ```php
-	public function scopeActive($query)
-	{
-	    return $query->where('active', '=', 1);
-	}
+public function scopeActive($query)
+{
+	return $query->where('active', '=', 1);
+}
 
-	public function scopeAdmin($query)
-	{
-	    return $query->where('is_admin', '=', 1);
-	}
-	
-	$active_administrators = User::active()->admin()->get();
+public function scopeAdmin($query)
+{
+	return $query->where('is_admin', '=', 1);
+}
+
+$active_administrators = User::active()->admin()->get();
 ```
