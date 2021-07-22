@@ -1,6 +1,6 @@
 # Coding Rule
 Coding rule for PHP & Laravel Framework
-Last updated at 19 Jul 2021
+Last updated at 22 Jul 2021
 
 # Table of Contents
 
