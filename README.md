@@ -166,20 +166,30 @@ public function addStringToPost(Post $post, string $someString): void
 
 ### Testcase
 
-Testcases need to be marked as being a test and can have some more annotations.
+Testcases need to be marked as being a test and can have some more annotations. snake_case and camelCase naming conventions are valid to create test methods. 
+Need to maintain the consistency.
 
 #### Example :
 
 ```php
 /**
- * This method is part of the public API.
- *
- * @return void
- * @api
- */
-public function fooBar(): void
+* Test required fields are configured
+*
+* @return void
+*/
+public function testValidation()
 {
- ...
+...
+}
+
+/**
+* Test required fields are configured
+*
+* @return void
+*/
+public function test_validation()
+{
+...
 }
 ```
 
