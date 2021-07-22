@@ -11,14 +11,15 @@ Last updated at 19 Jul 2021
 5. [Naming](https://github.com/saravanan-nichi-in/laravel-coding-rule#naming)
 6. [Rules](https://github.com/saravanan-nichi-in/laravel-coding-rule#rules)
 7. [Helper](https://github.com/saravanan-nichi-in/laravel-coding-rule#helper)
-8. [Service Provider](https://github.com/saravanan-nichi-in/laravel-coding-rule#service-provider)
-9. [Dependency Injection](https://github.com/saravanan-nichi-in/laravel-coding-rule#dependency-injection)
-10. [Facades](https://github.com/saravanan-nichi-in/laravel-coding-rule#facades)
-11. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
-12. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
-13. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
-14. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
-15. [Model](https://github.com/saravanan-nichi-in/laravel-coding-rule#model-1)
+8. [Design Pattern](https://github.com/saravanan-nichi-in/laravel-coding-rule#design-pattern)
+9. [Service Provider](https://github.com/saravanan-nichi-in/laravel-coding-rule#service-provider)
+10. [Dependency Injection](https://github.com/saravanan-nichi-in/laravel-coding-rule#dependency-injection)
+11. [Facades](https://github.com/saravanan-nichi-in/laravel-coding-rule#facades)
+12. [Routing](https://github.com/saravanan-nichi-in/laravel-coding-rule#routing)
+13. [Middleware](https://github.com/saravanan-nichi-in/laravel-coding-rule#middleware)
+14. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
+15. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
+16. [Model](https://github.com/saravanan-nichi-in/laravel-coding-rule#model-1)
 
 
 ## Validation
@@ -808,6 +809,146 @@ session('cart');
 session(['cart' => $data])
 ```
 
+## Design Pattern
+
+Take advantage of design pattern to optimize code and utilize maximum of it.
+
+### Repository Pattern
+
+The repository design pattern is an abstraction of the data layer, it acts as a middleman or middle layer between the data and access logic.
+
+#### Make Interface :
+
+Make an interface name with PostRepositoryInterface in app\Repositories directory.
+
+```php
+namespace App\Repositories;
+
+interface PostRepositoryInterface{
+	
+	public function getAll();
+
+	public function getPost($id);
+
+	// more
+}
+```
+
+#### Make repository class :
+
+Now make a repository class name with PostRepository by implementing PostRepositoryInterface in app\Repository directory.
+
+```php
+namespace App\Repositories;
+use App\Post;
+
+class PostRepository implements PostRepositoryInterface
+{
+	public function getAll(){
+		return Post::all();
+	}
+
+	public function getPost($id){
+		return Post::findOrFail($id);
+	}
+
+	// more 
+}
+```
+
+#### Make the controller :
+
+Our interface and repository class finished. Now we'll use it in our PostController class. Let's do that.
+
+
+```php
+namespace App\Repositories;
+use App\Post;
+
+class PostRepository implements PostRepositoryInterface
+{
+	public function getAll(){
+		return Post::all();
+	}
+
+	public function getPost($id){
+		return Post::findOrFail($id);
+	}
+
+	// more 
+}
+```
+
+#### Register the repository :
+
+We just finished our Post repository module. Our post controller used it but Laravel doesn't know our interface which implementation used. To register the post repository module add these in AppServiceProvider.
+
+```php
+namespace App\Providers;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{ 
+    public function register()
+    {
+        $this->app->bind(
+            'App\Repositories\PostRepositoryInterface',
+            'App\Repositories\PostRepository'
+        );
+    }
+
+    public function boot()
+    {
+        //
+    }
+```
+Our implementation finished! If today or tomorrow, we need to use different data source for our post then we don't need to change our PostController or any other controller were the PostRepositoryInterface used. It could be 10 or 100 more places depending on project size.
+
+For example, In the future, if we use data source as firebase instead of an eloquent model for MySQL database (Here PostRepository used eloquent model). That time we just need to change two places! First, add new class implementing the PostRepositoryInterface and update the binding at AppServiceProvider in register method. The example is given below.
+
+```php
+namespace App\Repositories;
+
+class PostRepositoryFirebase implements PostRepositoryInterface
+{
+	public function getAll(){
+		// example: http request to get all the post data and return;
+	}
+
+	public function getPost($id){
+		// example: http request to get specific post data and return;
+	}
+
+	// more 
+
+}
+
+```
+
+now we just have to change the bindings in AppServiceProvider. That's it!
+
+```php
+namespace App\Providers;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->app->bind(
+            'App\Repositories\PostRepositoryInterface',
+            'App\Repositories\PostRepositoryFirebase'
+        );
+    }
+    
+    public function boot()
+    {
+        //
+    }
+}
+
+```
+
 ## Service Provider
 
 Avoid designs that replace Service Provider and interface bindings according to the request information. That in such cases, use Contextual Binding.
@@ -890,6 +1031,42 @@ class HogeController
 class HogeService
 {
 
+}
+class HogeController
+{
+	private HogeService $service;
+	public function __construct(HogeService $service)
+	{
+		$this->service = $service;
+	}
+}
+```
+
+Avoid using new keyword to create object.
+
+#### Bad :
+
+```php
+class HogeService
+{
+	//
+}
+class HogeController
+{
+	private HogeService $service;
+	public function __construct()
+	{
+		$this->service = new HogeService();
+	}
+}
+```
+
+#### Good :
+
+```php
+class HogeService
+{
+	//
 }
 class HogeController
 {
