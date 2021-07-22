@@ -20,6 +20,7 @@ Last updated at 19 Jul 2021
 14. [Request](https://github.com/saravanan-nichi-in/laravel-coding-rule#request-1)
 15. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
 16. [Eloquent](https://github.com/saravanan-nichi-in/laravel-coding-rule#eloquent)
+17. [Error Handling](https://github.com/saravanan-nichi-in/laravel-coding-rule#error-handling)
 
 
 ## Validation
@@ -653,6 +654,32 @@ $apiKey = env('API_KEY');
 $apiKey = config('api.key');
 ```
 
+### DB Transaction
+
+Always make sure to use DB::beginTransaction() when you update values in two tables which is related with foreign key.
+
+#### Bad :
+
+```php
+DB::transaction(function () use ($postId, $inputs) {
+$this->service->update($postId, $inputs);
+});
+```
+
+#### Good :
+
+```php
+DB::beginTransaction();
+try {
+	$this->service->update($postId, $inputs);
+	DB::commit();
+} catch (Throwable $e) {
+	DB::rollBack();
+}
+```
+
+
+
 ### Object Creation
 
 Make it immutable as much as possible.
@@ -776,6 +803,28 @@ Carbon::today()
 ```php
 now()
 today()
+```
+
+#### Bad :
+
+```php
+$dateTime = Carbon::createFromFormat('Y-m-d H:i:s', '2020-03-23
+10:00:00');
+$now = Carbon::now();
+if ($now >= $dateTime) {
+//... 
+}
+```
+
+#### Good :
+
+```php
+$dateTime = Carbon::createFromFormat('Y-m-d H:i:s', '2020-03-23
+10:00:00');
+$now = Carbon::now();
+if ($now->gte($dateTime)) {
+//...
+}
 ```
 
 ### Package
@@ -1305,6 +1354,29 @@ return view('index')->with('title', $title)->with('client', $client)
 return view('index', compact('title', 'client'))
 ```
 
+### Form
+
+Make sure to use CSRF method when submitting form to avoid Cross-site request forgeries.
+
+#### Bad :
+
+```php
+<form id="post-edit-form" method="post">
+@method('put')
+// ...
+</form>
+```
+
+#### Good :
+
+```php
+<form id="post-edit-form" method="post">
+@csrf
+@method('put')
+// ...
+</form>
+```
+
 ## Eloquent
 
 ### Query Scopes
@@ -1373,4 +1445,46 @@ $posts = $author->posts;
 ->oldest()
 ->get(['id', 'name'])
 ->value('name')
+```
+
+## Collection
+
+#### Bad :
+
+```php
+$posts = Post::all();
+$postIds = [];
+foreach ($posts as $post) {
+	$postIds[] = $post->id;
+}
+```
+
+#### Good :
+
+```php
+$posts = Post::all();
+$postIds = $posts->map(function (Post $post) {
+	return $post->id;
+})->toArray();
+```
+
+#### Good :
+
+```php
+$posts = Post::all();
+$postIds = $posts->modelKeys();
+```
+
+## Error Handling
+
+#### Bad :
+
+```php
+throw new MyException('An error occured');
+```
+
+#### Good :
+
+```php
+throw new MyException("An error occurred while processing userId = {$userId}. There may be inconsistencies in the data on the table.");
 ```
