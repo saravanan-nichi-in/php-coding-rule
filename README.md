@@ -183,6 +183,47 @@ public function fooBar(): void
 }
 ```
 
+### Return Type
+
+Configure each method with the return type
+
+#### Example :
+
+```php
+declare(static_type = 1);
+
+class UserPostService
+{
+	/**
+     * Fetch latest Post
+     *
+     * @method latest
+     *
+     * @param Post $post
+     *
+     * @return App\Models\Post;
+     */
+	public function latest(Post $post): ?Post
+	{
+		return $post->latest()->first();
+	}
+	
+	/**
+     * Is User Active
+     *
+     * @method isUserActive
+     *
+     * @param User $user
+     *
+     * @return App\Models\User;
+     */
+	public function isUserActive(User $user): bool
+	{
+		return ($user->is_active) ? true : false;
+	}
+}
+```
+
 ## Naming
 
 It is very much mandatory to maintain the consistency across the application
