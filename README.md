@@ -21,6 +21,7 @@ Last updated at 22 Jul 2021
 15. [Views](https://github.com/saravanan-nichi-in/laravel-coding-rule#views)
 16. [Eloquent](https://github.com/saravanan-nichi-in/laravel-coding-rule#eloquent)
 17. [Error Handling](https://github.com/saravanan-nichi-in/laravel-coding-rule#error-handling)
+18. [Security](https://github.com/saravanan-nichi-in/laravel-coding-rule#security)
 
 
 ## Validation
@@ -1614,4 +1615,48 @@ throw new MyException('An error occured');
 
 ```php
 throw new MyException("An error occurred while processing userId = {$userId}. There may be inconsistencies in the data on the table.");
+```
+
+## Security
+
+Prevent SQL injection By Avoiding Raw Queries
+
+#### Bad :
+
+```php
+Route::get('this-is-prone-to-sql-injection', function() {
+$name = "'John' OR 1=1";
+return DB::select(
+	DB::raw("SELECT * FROM users WHERE name = $name"));
+});
+```
+Here the statement 1=1 used in the  OR condition will result in returning all the rows in the users table.
+
+#### Good :
+
+```php
+Route::get('safe-from-sql-injection', function() {
+$name = "'John' OR 1=1";
+return DB::select(
+	DB::raw("SELECT * FROM users WHERE name = ?", [$name]));
+});
+```
+
+Reduce Laravel Vulnerabilities From CSRF (Cross Site Request Forgery)
+
+#### Bad :
+
+```php
+<form name="test">
+<!-- Other inputs can come here-->
+</form>
+```
+
+#### Good :
+
+```php
+<form name="test">
+{!! csrf_field() !!}
+<!-- Other inputs can come here-->
+</form>
 ```
